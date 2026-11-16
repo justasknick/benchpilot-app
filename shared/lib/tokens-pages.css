@@ -1,0 +1,152 @@
+/* lib/tokens-pages.css - the "B · Command" palette for every extension PAGE (v1.7 M6): dashboard, popup, settings, welcome, upgrade, account.
+   Same values as lib/tokens-drawer.css (the shipped drawer is the source of truth), declared on :root instead of :host.
+   Spec: docs/specs/V1_7_SPEC.md sections 4, 11 and the approved pages prototype (docs/design/prototypes/v17-pages-prototype.html).
+   Load order on a page: tokens.css, motion.css, tokens-pages.css, pages.css, then the page's own CSS.
+
+   PALETTE (locked 6 Oct): purple #7357D8, yellow #FFD84D, off-white #F8F7F2.
+   YELLOW IS ONLY EVER A BACKGROUND BEHIND DARK TEXT (--bpd-on-yellow), or the three header numbers on the dark purple plate.
+   Never yellow text on a light surface.
+
+   THEMES work like tokens.css: no data-theme -> prefers-color-scheme; data-theme="light" | "dark" on <html> forces it.
+   Keep the media block and the forced dark block identical (tests/tokens-contrast.test.js enforces it, checks every text pair at
+   4.5:1 in both themes, and checks the values equal tokens-drawer.css).
+
+   PART 2 re-points the legacy --bp-* names at these values (the :root:root block), so older component CSS that still reads
+   --bp-paper, --bp-ink, --bp-amber ... re-themes to design B without a rewrite. */
+
+:root {
+  --bpd-purple:       #7357d8;   /* rail, header band, primary button, active chip */
+  --bpd-purple-hover: #6347c8;
+  --bpd-on-purple:    #ffffff;   /* text on purple */
+  --bpd-on-purple-2:  #f5f2ff;   /* secondary text on purple */
+  --bpd-yellow:       #ffd84d;   /* signal fill: stat numbers, "hit" chips, count badges. Dark text only. */
+  --bpd-on-yellow:    #1e1a2e;
+  --bpd-yellow-soft:  #fff4c7;   /* hover wash */
+  --bpd-paper:        #f8f7f2;   /* page background */
+  --bpd-card:         #ffffff;
+  --bpd-ink:          #1e1a2e;   /* body text */
+  --bpd-muted:        #6b6580;   /* secondary text */
+  --bpd-line:         #e6e3d8;
+  --bpd-field:        #8a839c;   /* control borders (3:1 on card and paper) */
+  --bpd-purple-text:  #6a4fd0;   /* purple used as TEXT (4.5:1 on paper, card and purple-soft) */
+  --bpd-purple-soft:  #ece8fb;
+  --bpd-danger:       #b83a27;   --bpd-danger-soft: #fbe7e2;
+  --bpd-warn:         #8a5a00;   --bpd-warn-soft:   #fff1d6;
+  --bpd-ok:           #2a7452;   --bpd-ok-soft:     #e3f3eb;
+  --bpd-focus:        #1e1a2e;   /* 2px solid ring on paper and cards (dark theme: light purple, never yellow) */
+  --bpd-focus-on-purple: #ffffff;/* the ring inside the purple rail and header band */
+  --bpd-stat-bg:      rgba(30, 20, 80, 0.30);   /* translucent plate behind the header numbers */
+  --bpd-stat-bg-hover: rgba(30, 20, 80, 0.45);
+  --bpd-bar-long:     #8a5a00;
+  --bpd-toast-bg:     #1e1a2e;   --bpd-toast-text: #f8f7f2;   --bpd-toast-act: #ffd84d;
+  --bpd-scrim:        rgba(23, 20, 31, 0.40);
+  --bpd-shadow:       0 18px 50px rgba(30, 26, 46, 0.18);
+  --bpd-card-shadow:  0 1px 0 var(--bpd-line), 0 4px 14px rgba(30, 26, 46, 0.06);
+  --bpd-f-head: var(--bp-display);
+  --bpd-f-body: var(--bp-font);
+  --bpd-f-mono: var(--bp-mono);
+  --bpd-spring: cubic-bezier(.2, 1.25, .3, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bpd-paper:       #17141f;
+    --bpd-card:        #211c2e;
+    --bpd-ink:         #f3f1ea;
+    --bpd-muted:       #a39db8;
+    --bpd-line:        #2e2840;
+    --bpd-field:       #8e88a6;
+    --bpd-purple-text: #a893f2;
+    --bpd-purple-soft: #2d2547;
+    --bpd-yellow-soft: #3a3318;
+    --bpd-danger:      #f08a73;   --bpd-danger-soft: #3a201b;
+    --bpd-warn:        #f2c14e;   --bpd-warn-soft:   #3a2f12;
+    --bpd-ok:          #6cc9a0;   --bpd-ok-soft:     #1b3328;
+    --bpd-focus:       #a893f2;
+    --bpd-bar-long:    #f2c14e;
+    --bpd-toast-bg:    #f3f1ea;   --bpd-toast-text: #17141f;   --bpd-toast-act: #5b41c0;
+    --bpd-scrim:       rgba(0, 0, 0, 0.55);
+    --bpd-shadow:      0 18px 50px rgba(0, 0, 0, 0.5);
+    --bpd-card-shadow: 0 1px 0 var(--bpd-line), 0 4px 14px rgba(0, 0, 0, 0.35);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bpd-paper:       #17141f;
+  --bpd-card:        #211c2e;
+  --bpd-ink:         #f3f1ea;
+  --bpd-muted:       #a39db8;
+  --bpd-line:        #2e2840;
+  --bpd-field:       #8e88a6;
+  --bpd-purple-text: #a893f2;
+  --bpd-purple-soft: #2d2547;
+  --bpd-yellow-soft: #3a3318;
+  --bpd-danger:      #f08a73;   --bpd-danger-soft: #3a201b;
+  --bpd-warn:        #f2c14e;   --bpd-warn-soft:   #3a2f12;
+  --bpd-ok:          #6cc9a0;   --bpd-ok-soft:     #1b3328;
+  --bpd-focus:       #a893f2;
+  --bpd-bar-long:    #f2c14e;
+  --bpd-toast-bg:    #f3f1ea;   --bpd-toast-text: #17141f;   --bpd-toast-act: #5b41c0;
+  --bpd-scrim:       rgba(0, 0, 0, 0.55);
+  --bpd-shadow:      0 18px 50px rgba(0, 0, 0, 0.5);
+  --bpd-card-shadow: 0 1px 0 var(--bpd-line), 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+/* ── PART 2: legacy --bp-* names -> design B (one block, so it wins over every tokens.css theme block by order) ───────────── */
+:root:root {
+  --bp-paper:   var(--bpd-paper);
+  --bp-tile:    var(--bpd-card);
+  --bp-tile-2:  var(--bpd-paper);
+  --bp-tile-3:  var(--bpd-purple-soft);
+  --bp-line:    var(--bpd-line);
+  --bp-line-2:  var(--bpd-field);
+
+  --bp-text:   var(--bpd-ink);
+  --bp-text-2: var(--bpd-muted);
+  --bp-text-3: var(--bpd-muted);
+
+  --bp-ink:        var(--bpd-purple);        /* rail, header bands, primary fills */
+  --bp-ink-2:      var(--bpd-purple-hover);
+  --bp-ink-line:   var(--bpd-stat-bg-hover);
+  --bp-ink-text:   var(--bpd-on-purple);
+  --bp-ink-muted:  var(--bpd-on-purple-2);
+  --bp-ink-faint:  var(--bpd-on-purple-2);
+
+  --bp-amber:       var(--bpd-yellow);       /* a fill behind dark text, never text on a light surface */
+  --bp-amber-deep:  var(--bpd-warn);
+  --bp-amber-tint:  var(--bpd-warn-soft);
+  --bp-amber-on:    var(--bpd-warn);
+  --bp-on-amber:    var(--bpd-on-yellow);
+
+  --bp-go:        var(--bpd-ok);      --bp-go-tint:   var(--bpd-ok-soft);      --bp-go-line:   var(--bpd-ok-soft);
+  --bp-warn:      var(--bpd-warn);    --bp-warn-tint: var(--bpd-warn-soft);    --bp-warn-line: var(--bpd-warn-soft);
+  --bp-stop:      var(--bpd-danger);  --bp-stop-tint: var(--bpd-danger-soft);  --bp-stop-line: var(--bpd-danger-soft);
+  --bp-sky:       var(--bpd-purple-text); --bp-sky-tint: var(--bpd-purple-soft); --bp-sky-line: var(--bpd-purple-soft);
+
+  --bp-shadow-sm: var(--bpd-card-shadow);
+  --bp-shadow:    var(--bpd-card-shadow);
+  --bp-shadow-lg: var(--bpd-shadow);
+  --bp-glow:      var(--bpd-yellow-soft);
+  --bp-focus:     0 0 0 2px var(--bpd-paper), 0 0 0 4px var(--bpd-focus);   /* a solid 2px ring (box-shadow form of the legacy token) */
+
+  --bp-inverse-bg:   var(--bpd-toast-bg);
+  --bp-inverse-text: var(--bpd-toast-text);
+
+  --bp-status-new:       var(--bpd-purple-text);
+  --bp-status-contacted: var(--bpd-warn);
+  --bp-status-responded: var(--bpd-ok);
+  --bp-status-interview: var(--bpd-ok);
+  --bp-status-closed:    var(--bpd-muted);
+
+  --bp-brand-50:  var(--bpd-purple-soft);
+  --bp-brand-100: var(--bpd-purple-soft);
+  --bp-brand-200: var(--bpd-toast-act);
+  --bp-brand-500: var(--bpd-purple);
+  --bp-brand-600: var(--bpd-purple-hover);
+  --bp-brand-700: var(--bpd-purple-hover);
+  --bp-on-brand:  var(--bpd-on-purple);
+
+  --bp-text-xs: 12px;        /* minimum text size on pages is 12px (WCAG 2.2 AA target) */
+  --bp-radius-card: 14px;
+  --bp-radius-tile: 14px;
+}

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- CSP (security review of #347, L4; same shape as website/admin.html). Scripts and styles from this site only: the web app decrypts
+       My book in this tab, so no injected script may run here. connect-src: the Supabase project only (API, functions, signed Storage URLs).
+       Google sign-in is a full-page redirect to Supabase Auth (a navigation, not limited here). Inline styles set by script go through
+       the CSSOM (js/dom.js), which this policy allows. blob: images/downloads for resume files and CSV exports. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob: https://uhgtlyxarozzdgdizoaz.supabase.co; font-src 'self'; connect-src https://uhgtlyxarozzdgdizoaz.supabase.co; frame-src 'none'; worker-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BenchPilot</title>
+  <meta name="description" content="BenchPilot on the web: your own encrypted book and your team's shared bench, vendor book, requirements and submissions.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/svg+xml" href="shared/icons/logo-mark.svg">
+  <!-- Shared design tokens from the extension. Publishing will copy these next to the web app (see README.md). -->
+  <link rel="stylesheet" href="shared/lib/tokens.css">
+  <link rel="stylesheet" href="shared/lib/tokens-pages.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div id="app"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <noscript><p class="note note-warn">BenchPilot needs JavaScript to run.</p></noscript>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
