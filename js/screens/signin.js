@@ -1,7 +1,7 @@
 // Sign in (spec section 5, screen 1): Google, or an email and a 6-digit code (no password), plus "Try the demo workspace".
 // In demo mode (?demo=1) there is nothing to sign in to: one button enters the demo workspace.
 
-import { h, clear } from '../dom.js';
+import { h, clear, append } from '../dom.js';
 import { button, field, input, note } from '../ui.js';
 import { icon } from '../icons.js';
 import { brand, PRODUCT } from '../shell.js';
@@ -90,7 +90,7 @@ export async function render(ctx) {
       catch (err) { show('danger', err.message); emailIn.focus(); }
       finally { send.disabled = false; }
     });
-    body.append(
+    append(body,
       button('Continue with Google', { variant: 'primary', class: 'btn-block', onclick: () => auth.startGoogle() }),
       // "Sign in with Microsoft" (Supabase's Azure provider): only when config.js turns it on, after Nick's setup (docs/setup/MICROSOFT_SIGN_IN.md)
       providerEnabled('azure') ? button('Continue with Microsoft', { variant: 'secondary', class: 'btn-block', onclick: () => auth.startMicrosoft() }) : null,
