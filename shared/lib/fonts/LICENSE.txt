@@ -1,0 +1,3 @@
+Familjen Grotesk (c) The Familjen Grotesk Project Authors; IBM Plex Sans and IBM Plex Mono (c) IBM Corp.
+All three are licensed under the SIL Open Font License, Version 1.1: https://openfontlicense.org
+Source: Google Fonts (fonts.google.com), latin subset.

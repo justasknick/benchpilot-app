@@ -1,0 +1,10 @@
+/* lib/fonts/fonts.css — bundled typefaces for the Departure Board design (SIL Open Font License 1.1,
+   downloaded from Google Fonts 2026-09-30, latin subset). Family names are prefixed "BP " so they
+   can never clash with fonts on LinkedIn. Extension pages load this via lib/tokens.css; the LinkedIn
+   drawer loads it at document level from content/content.css (fonts can't be declared inside a shadow root). */
+@font-face { font-family: "BP Familjen Grotesk"; font-style: normal; font-weight: 500 700; font-display: swap;
+  src: url("familjen-grotesk-latin.woff2") format("woff2"); }
+@font-face { font-family: "BP IBM Plex Sans"; font-style: normal; font-weight: 400 600; font-display: swap;
+  src: url("ibm-plex-sans-latin.woff2") format("woff2"); }
+@font-face { font-family: "BP IBM Plex Mono"; font-style: normal; font-weight: 500; font-display: swap;
+  src: url("ibm-plex-mono-500-latin.woff2") format("woff2"); }

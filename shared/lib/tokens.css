@@ -1,0 +1,362 @@
+/* lib/tokens.css — BenchPilot design system "Board" (single source of truth), v1.6.
+   Evolved Departure Board: ink-navy hero tiles + signal amber on warm paper (light) or deep navy (dark).
+   Spec: docs/specs/V1_6_DESIGN_SPEC.md section 1. Guide: docs/design/STYLEGUIDE.md.
+
+   Used by every extension page (<link rel="stylesheet" href="../lib/tokens.css">) and by the LinkedIn
+   drawer inside its Shadow DOM (:host). Everything is prefixed bp- / --bp- so it can never clash with host pages.
+
+   THEME SELECTION (works identically on :root for pages and :host for the drawer shadow root)
+     no data-theme attribute  -> follows prefers-color-scheme
+     data-theme="light"       -> forces light
+     data-theme="dark"        -> forces dark
+   BP.theme.apply(root, settings) in lib/motion.js sets the attribute from chrome.storage.local.
+
+   TOKEN-ONLY RULE: components read tokens and never hard-code a theme colour. The only literal colours
+   allowed in component CSS are the constant "ink" surfaces' foregrounds (use --bp-ink-text / --bp-ink-muted).
+
+   There are three groups below:
+     1. Board tokens (--bp-paper, --bp-tile, --bp-line, --bp-ink-*, --bp-amber-*, --bp-go, --bp-stop, --bp-sky ...)
+     2. Legacy aliases (--bp-bg, --bp-surface, --bp-text-3 ...) mapped onto the Board tokens with var(), so
+        existing dashboard / drawer / popup CSS keeps working and re-themes automatically.
+     3. Non-colour tokens (type, spacing, radius, easing, shadow).
+   Aliases live ONLY in the base block: custom properties resolve per element, so a theme block only needs to
+   override Board tokens. Keep the two dark blocks identical (tests/tokens-contrast.test.js enforces this). */
+
+@import url("fonts/fonts.css");
+
+/* ── 1 + 2 + 3. Light (default) ─────────────────────────────────────────── */
+:root, :host {
+  color-scheme: light;
+
+  /* Board tokens */
+  --bp-paper:   #f3f0e8;   /* page background */
+  --bp-tile:    #fcfbf8;   /* cards, bento tiles */
+  --bp-tile-2:  #f1ede4;   /* inner rows, chips */
+  --bp-tile-3:  #e8e2d5;   /* pressed / track fills */
+  --bp-line:    #e3ddd0;
+  --bp-line-2:  #d3ccbd;
+
+  --bp-text:   #17202d;  /* primary text */
+  --bp-text-2: #4b5567;  /* secondary text */
+  --bp-text-3: #5d6575;  /* tertiary text (4.5:1 on tile-2) */
+
+  --bp-ink:        #0f1a2c;  /* sidebar, hero tiles, drawer header, primary buttons */
+  --bp-ink-2:      #0a1221;  /* clock cells, deeper ink */
+  --bp-ink-line:   #24324b;  /* borders on ink */
+  --bp-ink-text:   #e9eef6;  /* text on ink */
+  --bp-ink-muted:  #9db0ca;  /* secondary text on ink */
+  --bp-ink-faint:  #7f8ba3;  /* labels on clock cells */
+
+  --bp-amber:       #f5b83d; /* signal: digits, glow, highlights, CTA fill. NEVER text on light surfaces */
+  --bp-amber-deep:  #8a5a00; /* amber-coloured TEXT on light surfaces */
+  --bp-amber-tint:  #fff1cf;
+  --bp-amber-on:    #6e4a00; /* text on amber-tint */
+  --bp-on-amber:    #2b1c00; /* text on solid amber fill (9.3:1) */
+
+  --bp-go:        #1a7a49;
+  --bp-go-tint:   #dff3e7;
+  --bp-warn:      #a3510f;
+  --bp-warn-tint: #fde9d7;
+  --bp-stop:      #a3261d;
+  --bp-stop-tint: #fde3e0;
+  --bp-sky:       #2f5fd0;
+  --bp-sky-tint:  #e6edff;
+
+  --bp-go-line:   #aedcc2;
+  --bp-warn-line: #f3d58f;
+  --bp-stop-line: #f5bcb6;
+  --bp-sky-line:  #c0d0f7;
+
+  --bp-shadow-sm: 0 1px 2px rgba(15, 26, 44, 0.06);
+  --bp-shadow:    0 1px 0 rgba(15, 26, 44, 0.04), 0 10px 30px -18px rgba(15, 26, 44, 0.35);
+  --bp-shadow-lg: 0 12px 32px rgba(15, 26, 44, 0.14), 0 3px 10px rgba(15, 26, 44, 0.08);
+  --bp-glow:      rgba(245, 184, 61, 0.16);  /* spotlight / halo tint */
+
+  /* Legacy aliases -> Board tokens (do not redefine in theme blocks) */
+  --bp-bg:            var(--bp-paper);
+  --bp-surface:       var(--bp-tile);
+  --bp-surface-2:     var(--bp-tile-2);
+  --bp-surface-3:     var(--bp-tile-3);
+  --bp-border:        var(--bp-line);
+  --bp-border-strong: var(--bp-line-2);
+  --bp-inverse-bg:    var(--bp-ink);
+  --bp-inverse-text:  var(--bp-ink-text);
+  --bp-amber-soft:    var(--bp-amber-tint);
+  --bp-amber-text:    var(--bp-amber-on);
+  --bp-gold:          var(--bp-amber);
+  --bp-focus:         0 0 0 3px rgba(245, 184, 61, 0.45);
+
+  --bp-success: var(--bp-go);    --bp-success-bg: var(--bp-go-tint);    --bp-success-border: var(--bp-go-line);
+  --bp-warning: var(--bp-amber-on); --bp-warning-bg: var(--bp-amber-tint); --bp-warning-border: var(--bp-warn-line);
+  --bp-danger:  var(--bp-stop);  --bp-danger-bg:  var(--bp-stop-tint);  --bp-danger-border:  var(--bp-stop-line);
+  --bp-info:    var(--bp-sky);   --bp-info-bg:    var(--bp-sky-tint);   --bp-info-border:    var(--bp-sky-line);
+
+  --bp-status-new:       var(--bp-sky);
+  --bp-status-contacted: var(--bp-amber-deep);
+  --bp-status-responded: var(--bp-go);
+  --bp-status-interview: #0f766e;
+  --bp-status-closed:    var(--bp-text-3);
+
+  /* Legacy brand scale. brand-500 = structural fill (ink in light, amber in dark); on-brand = text on it */
+  --bp-brand-50:  #fbf6ea;
+  --bp-brand-100: var(--bp-amber-tint);
+  --bp-brand-200: #f8d68a;
+  --bp-brand-500: var(--bp-ink);
+  --bp-brand-600: #1c2a42;
+  --bp-brand-700: var(--bp-ink-2);
+  --bp-on-brand:  #ffffff;
+
+  /* Type — bundled faces (see lib/fonts), with system fallbacks */
+  --bp-display: "BP Familjen Grotesk", "Segoe UI", system-ui, sans-serif;
+  --bp-font: "BP IBM Plex Sans", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --bp-mono: "BP IBM Plex Mono", ui-monospace, Consolas, "Liberation Mono", monospace;
+  --bp-text-xs: 11px;
+  --bp-text-sm: 12px;
+  --bp-text-md: 13px;
+  --bp-text-lg: 15px;
+  --bp-text-xl: 18px;
+  --bp-text-2xl: 24px;
+
+  /* Spacing (4px grid) */
+  --bp-1: 4px;  --bp-2: 8px;  --bp-3: 12px; --bp-4: 16px;
+  --bp-5: 20px; --bp-6: 24px; --bp-8: 32px; --bp-10: 40px;
+
+  /* Radius: legacy sm/md/lg stay; Board adds card (14, drawer lead cards) and tile (20, bento tiles) */
+  --bp-radius-sm: 7px;
+  --bp-radius:    10px;
+  --bp-radius-lg: 16px;
+  --bp-radius-card: 14px;
+  --bp-radius-tile: 20px;
+  --bp-radius-full: 999px;
+
+  /* Easing */
+  --bp-ease:   cubic-bezier(0.16, 1, 0.3, 1);     /* legacy */
+  --bp-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* overshoot: rises, bars, odometer */
+  --bp-out:    cubic-bezier(0.22, 1, 0.36, 1);    /* ease-out: rings, sweeps, theme fade */
+
+  /* Production scale (design brief E2/E3, 14 Nov 2026). Theme-free, so one block serves light and dark, pages and the drawer.
+     Type 12 / 13 / 15 / 18 / 24 + 34 for stat numbers; table rows 40px (32px compact); radius controls 10, cards 14, tiles 20. */
+  --bpd-fs-xs: 12px;
+  --bpd-fs-sm: 13px;
+  --bpd-fs-md: 15px;
+  --bpd-fs-lg: 18px;
+  --bpd-fs-xl: 24px;
+  --bpd-fs-stat: 34px;
+  --bpd-row: 40px;
+  --bpd-row-compact: 32px;
+  --bpd-r-ctl: 10px;
+  --bpd-r-card: 14px;
+  --bpd-r-tile: 20px;
+  --bpd-r-full: 999px;
+  --bpd-btn-h: 36px;
+  --bpd-btn-h-sm: 28px;
+  --bpd-btn-h-lg: 44px;
+}
+
+/* ── Dark: follow the system unless the user forced light ──────────────── */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]), :host(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --bp-paper:   #070d18;
+    --bp-tile:    #0f1828;
+    --bp-tile-2:  #142035;
+    --bp-tile-3:  #1b2b46;
+    --bp-line:    #1d2a41;
+    --bp-line-2:  #2a3a57;
+    --bp-text:   #e9eef6;
+    --bp-text-2: #b3c0d4;
+    --bp-text-3: #8696ae;
+    --bp-ink:     #0b1424;
+    --bp-ink-2:   #060c17;
+    --bp-amber-deep: #f5b83d;
+    --bp-amber-tint: #3a2a08;
+    --bp-amber-on:   #ffd27a;
+    --bp-go:        #5fd497;  --bp-go-tint:   #0f3020;  --bp-go-line:   #1f5a3c;
+    --bp-warn:      #f2a564;  --bp-warn-tint: #3a2210;  --bp-warn-line: #6b4f1a;
+    --bp-stop:      #ff8a80;  --bp-stop-tint: #3d1512;  --bp-stop-line: #7a2a22;
+    --bp-sky:       #8eaaff;  --bp-sky-tint:  #17244a;  --bp-sky-line:  #2b4180;
+    --bp-status-interview: #5eead4;
+    --bp-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --bp-shadow:    0 1px 0 rgba(255, 255, 255, 0.03), 0 18px 40px -22px rgba(0, 0, 0, 0.9);
+    --bp-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+    --bp-glow:      rgba(245, 184, 61, 0.22);
+    --bp-inverse-bg:   #e9eef6;
+    --bp-inverse-text: #0f1a2c;
+    --bp-brand-50:  #1a1a14;
+    --bp-brand-200: #6b4f1a;
+    --bp-brand-500: #f5b83d;
+    --bp-brand-600: #f8c865;
+    --bp-brand-700: #fbd27a;
+    --bp-on-brand:  #0f1a2c;
+  }
+}
+
+/* ── Dark: forced (identical declarations to the block above) ──────────── */
+:root[data-theme="dark"], :host([data-theme="dark"]) {
+  color-scheme: dark;
+  --bp-paper:   #070d18;
+  --bp-tile:    #0f1828;
+  --bp-tile-2:  #142035;
+  --bp-tile-3:  #1b2b46;
+  --bp-line:    #1d2a41;
+  --bp-line-2:  #2a3a57;
+  --bp-text:   #e9eef6;
+  --bp-text-2: #b3c0d4;
+  --bp-text-3: #8696ae;
+  --bp-ink:     #0b1424;
+  --bp-ink-2:   #060c17;
+  --bp-amber-deep: #f5b83d;
+  --bp-amber-tint: #3a2a08;
+  --bp-amber-on:   #ffd27a;
+  --bp-go:        #5fd497;  --bp-go-tint:   #0f3020;  --bp-go-line:   #1f5a3c;
+  --bp-warn:      #f2a564;  --bp-warn-tint: #3a2210;  --bp-warn-line: #6b4f1a;
+  --bp-stop:      #ff8a80;  --bp-stop-tint: #3d1512;  --bp-stop-line: #7a2a22;
+  --bp-sky:       #8eaaff;  --bp-sky-tint:  #17244a;  --bp-sky-line:  #2b4180;
+  --bp-status-interview: #5eead4;
+  --bp-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --bp-shadow:    0 1px 0 rgba(255, 255, 255, 0.03), 0 18px 40px -22px rgba(0, 0, 0, 0.9);
+  --bp-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+  --bp-glow:      rgba(245, 184, 61, 0.22);
+  --bp-inverse-bg:   #e9eef6;
+  --bp-inverse-text: #0f1a2c;
+  --bp-brand-50:  #1a1a14;
+  --bp-brand-200: #6b4f1a;
+  --bp-brand-500: #f5b83d;
+  --bp-brand-600: #f8c865;
+  --bp-brand-700: #fbd27a;
+  --bp-on-brand:  #0f1a2c;
+}
+
+/* ── Base components (opt-in classes) ───────────────────────────────────── */
+.bp-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--bp-2);
+  height: 32px; padding: 0 var(--bp-3);
+  font: 600 var(--bp-text-md)/1 var(--bp-font);
+  color: var(--bp-text); background: var(--bp-surface);
+  border: 1px solid var(--bp-border-strong); border-radius: var(--bp-radius-sm);
+  cursor: pointer; white-space: nowrap; text-decoration: none;
+  transition: background .15s, border-color .15s, color .15s, box-shadow .15s;
+}
+.bp-btn:hover:not(:disabled) { background: var(--bp-surface-2); }
+.bp-btn:focus-visible { outline: none; box-shadow: var(--bp-focus); }
+.bp-btn:disabled { opacity: .5; cursor: not-allowed; }
+.bp-btn--primary { background: var(--bp-brand-500); border-color: var(--bp-brand-500); color: var(--bp-on-brand); }
+.bp-btn--primary:hover:not(:disabled) { background: var(--bp-brand-600); border-color: var(--bp-brand-600); }
+.bp-btn--ghost { background: transparent; border-color: transparent; color: var(--bp-text-2); }
+.bp-btn--ghost:hover:not(:disabled) { background: var(--bp-surface-2); color: var(--bp-text); }
+.bp-btn--danger { color: var(--bp-danger); }
+.bp-btn--danger:hover:not(:disabled) { background: var(--bp-danger-bg); border-color: var(--bp-danger-border); }
+.bp-btn--sm { height: 26px; padding: 0 var(--bp-2); font-size: var(--bp-text-sm); }
+.bp-btn--lg { height: 40px; padding: 0 var(--bp-5); font-size: var(--bp-text-lg); }
+.bp-btn--icon { width: 32px; padding: 0; }
+.bp-btn--sm.bp-btn--icon { width: 26px; }
+
+.bp-input, .bp-select, .bp-textarea {
+  width: 100%; box-sizing: border-box;
+  font: 400 var(--bp-text-md)/1.4 var(--bp-font); color: var(--bp-text);
+  background: var(--bp-surface); border: 1px solid var(--bp-border-strong);
+  border-radius: var(--bp-radius-sm); padding: 7px 10px; outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.bp-input:focus, .bp-select:focus, .bp-textarea:focus { border-color: var(--bp-brand-500); box-shadow: var(--bp-focus); }
+.bp-input::placeholder, .bp-textarea::placeholder { color: var(--bp-text-3); }
+.bp-textarea { resize: vertical; }
+.bp-label { display: block; font: 600 var(--bp-text-sm)/1.3 var(--bp-font); color: var(--bp-text-2); margin-bottom: var(--bp-1); }
+.bp-hint { font: 400 var(--bp-text-xs)/1.4 var(--bp-font); color: var(--bp-text-3); }
+
+.bp-card {
+  background: var(--bp-surface); border: 1px solid var(--bp-border);
+  border-radius: var(--bp-radius); box-shadow: var(--bp-shadow-sm);
+}
+
+.bp-badge {
+  display: inline-flex; align-items: center; gap: 4px; height: 20px; padding: 0 8px;
+  font: 600 var(--bp-text-xs)/1 var(--bp-font); white-space: nowrap;
+  border-radius: var(--bp-radius-full); background: var(--bp-surface-3); color: var(--bp-text-2);
+}
+.bp-badge--brand   { background: var(--bp-brand-100); color: var(--bp-brand-600); }
+.bp-badge--success { background: var(--bp-success-bg); color: var(--bp-success); }
+.bp-badge--warning { background: var(--bp-warning-bg); color: var(--bp-warning); }
+.bp-badge--danger  { background: var(--bp-danger-bg); color: var(--bp-danger); }
+.bp-badge--pro     { background: var(--bp-amber); color: var(--bp-on-amber); letter-spacing: .04em; }
+
+.bp-status { display: inline-flex; align-items: center; gap: 6px; font: 600 var(--bp-text-sm)/1 var(--bp-font); }
+.bp-status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.bp-status--new       { color: var(--bp-status-new); }
+.bp-status--contacted { color: var(--bp-status-contacted); }
+.bp-status--responded { color: var(--bp-status-responded); }
+.bp-status--interview { color: var(--bp-status-interview); }
+.bp-status--closed    { color: var(--bp-status-closed); }
+
+.bp-switch { position: relative; display: inline-block; width: 34px; height: 20px; flex-shrink: 0; }
+.bp-switch input { opacity: 0; width: 0; height: 0; }
+.bp-switch span {
+  position: absolute; inset: 0; cursor: pointer; border-radius: var(--bp-radius-full);
+  background: var(--bp-border-strong); transition: background .2s;
+}
+.bp-switch span::before {
+  content: ""; position: absolute; width: 16px; height: 16px; left: 2px; top: 2px;
+  border-radius: 50%; background: #fff; box-shadow: var(--bp-shadow-sm); transition: transform .2s var(--bp-ease);
+}
+.bp-switch input:checked + span { background: var(--bp-brand-500); }
+.bp-switch input:checked + span::before { transform: translateX(14px); }
+.bp-switch input:focus-visible + span { box-shadow: var(--bp-focus); }
+
+.bp-skeleton {
+  background: linear-gradient(90deg, var(--bp-surface-2) 25%, var(--bp-surface-3) 50%, var(--bp-surface-2) 75%);
+  background-size: 200% 100%; animation: bp-shimmer 1.2s infinite; border-radius: var(--bp-radius-sm);
+}
+@keyframes bp-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+.bp-toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+  display: flex; align-items: center; gap: var(--bp-3); max-width: min(560px, calc(100vw - 32px));
+  padding: 10px 14px; border-radius: var(--bp-radius);
+  background: var(--bp-inverse-bg); color: var(--bp-inverse-text);
+  font: 500 var(--bp-text-md)/1.4 var(--bp-font); box-shadow: var(--bp-shadow-lg);
+  z-index: 2147483647; animation: bp-toast-in .25s var(--bp-ease);
+}
+.bp-toast button {
+  font: 700 var(--bp-text-sm)/1 var(--bp-font); color: var(--bp-brand-200);
+  background: none; border: none; cursor: pointer; padding: 4px; white-space: nowrap;
+}
+@keyframes bp-toast-in { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* ── Departure Board signature pieces (shared by drawer, popup, pages) ──── */
+/* Wordmark: <span class="bp-wordmark">Bench<b>Pilot</b></span> */
+.bp-wordmark { font: 700 17px/1 var(--bp-display); letter-spacing: -0.01em; color: inherit; }
+.bp-wordmark b { color: var(--bp-amber); font-weight: 700; }
+
+/* Ink header bar */
+.bp-inkbar { background: var(--bp-ink); color: var(--bp-ink-text); }
+
+/* Clock board: <div class="bp-board"><div class="bp-flap is-home"><i>IST</i><b>11:30</b></div>…</div> */
+.bp-board { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; }
+.bp-flap {
+  background: var(--bp-ink-2); border: 1px solid var(--bp-ink-line); border-radius: 6px;
+  padding: 5px 0 4px; text-align: center; position: relative; overflow: hidden;
+}
+.bp-flap::after { /* split-flap seam */
+  content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(0, 0, 0, 0.35);
+}
+.bp-flap i { display: block; font: 500 9.5px/1.2 var(--bp-mono); font-style: normal; letter-spacing: .08em; color: var(--bp-ink-faint); }
+.bp-flap b { display: block; font: 500 15px/1.3 var(--bp-mono); color: var(--bp-amber); font-variant-numeric: tabular-nums; }
+.bp-flap.is-home b { color: #fff; }
+@keyframes bp-flip { 0% { transform: rotateX(0); } 50% { transform: rotateX(90deg); } 100% { transform: rotateX(0); } }
+.bp-flap.is-flipping b { animation: bp-flip .32s var(--bp-ease); }
+
+/* Amber meter: <div class="bp-meter"><i style="width:72%"></i></div> */
+.bp-meter { height: 5px; background: var(--bp-surface-3); border-radius: 9px; overflow: hidden; }
+.bp-meter i { display: block; height: 100%; background: var(--bp-amber); border-radius: 9px; transition: width .4s var(--bp-ease); }
+
+/* Time chip: <span class="bp-chip bp-chip--time">10 AM EST → 7:30 PM IST</span> */
+.bp-chip { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px; border-radius: 6px;
+  font: 500 11.5px/1 var(--bp-font); white-space: nowrap; background: var(--bp-surface-3); color: var(--bp-text-2); }
+.bp-chip--time { background: var(--bp-amber-soft); color: var(--bp-amber-text); }
+.bp-chip--trusted { background: var(--bp-success-bg); color: var(--bp-success); }
+.bp-chip--avoid { background: var(--bp-danger-bg); color: var(--bp-danger); }
+
